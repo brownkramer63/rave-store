@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments/head :: header"></head>
+
+<body>
+<div class="dashboard-main-wrapper">
+    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/left-sidebar :: left-sidebar"></div>
+    <div class="dashboard-wrapper">
+        <div class="container-fluid dashboard-content">
+            <div class="row mb-4">
+                <div class="col-lg-9">
+                    <p class="text-uppercase text-muted font-weight-bold mb-2">cataclysmSolutions module</p>
+                    <h1 class="mb-3">CustomTotem</h1>
+                    <p class="lead text-muted">Showcase custom Totem offers with product photos, names, pricing, and demo videos.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xl-3 mb-4" th:each="slot : ${#numbers.sequence(1,4)}">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="bg-light border rounded d-flex align-items-center justify-content-center mb-3" style="height: 220px;">
+                                <div class="text-center text-muted">
+                                    <i class="fa fa-image fa-3x mb-3"></i>
+                                    <div th:text="'Photo Spot ' + ${slot}">Photo Spot</div>
+                                </div>
+                            </div>
+                            <label class="font-weight-bold">Name</label>
+                            <div class="border rounded p-3 mb-3 text-muted">CustomTotem product name</div>
+                            <label class="font-weight-bold">Pricing</label>
+                            <div class="border rounded p-3 text-muted">Price or package tier</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-lg-6 mb-4" th:each="video : ${#numbers.sequence(1,2)}">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 th:text="'Demo Video ' + ${video}">Demo Video</h4>
+                            <div class="bg-dark border rounded d-flex align-items-center justify-content-center" style="height: 280px;">
+                                <div class="text-center text-white-50">
+                                    <i class="fa fa-play-circle fa-4x mb-3"></i>
+                                    <div>Video embed spot</div>
+                                </div>
+                            </div>
+                            <p class="text-muted mt-3 mb-0">Place a product walkthrough, customer demo, or installation preview here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/javascript :: js"></div>
+</body>
+
+</html>

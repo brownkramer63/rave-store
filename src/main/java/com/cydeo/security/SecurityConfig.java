@@ -1,7 +1,5 @@
 package com.cydeo.security;
 
-import com.cydeo.security.AuthSuccessHandler;
-import com.cydeo.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,37 +14,44 @@ public class SecurityConfig {
     private final SecurityService securityService;
     private final AuthSuccessHandler authSuccessHandler;
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-
         return http
                 .authorizeRequests()
                     .antMatchers("/users/**").hasAnyAuthority("Root User", "Admin")
                     .antMatchers("/companies/**").hasAnyAuthority("Root User")
-                    .antMatchers("/", "/login", "fragments", "/assets/**", "/img/**")
-                    .permitAll()
+                    .antMatchers(
+                            "/",
+                            "/login",
+                            "/about",
+                            "/autoformprocessing",
+                            "/customtotem",
+                            "/fragments/**",
+                            "/css/**",
+                            "/js/**",
+                            "/images/**",
+                            "/img/**",
+                            "/assets/**",
+                            "/webjars/**",
+                            "/favicon.ico"
+                    ).permitAll()
                     .anyRequest().authenticated()
                 .and()
-                .formLogin()
+                    .formLogin()
                     .loginPage("/login")
                     .successHandler(authSuccessHandler)
                     .failureUrl("/login?error=true")
                     .permitAll()
                 .and()
-                .logout()
+                    .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/login")
                 .and()
-                .rememberMe()
+                    .rememberMe()
                     .tokenValiditySeconds(86400)
-                    .key("sparkle")
-                .userDetailsService(securityService).and().build();
-
-
-
-
+                    .key("cataclysm")
+                    .userDetailsService(securityService)
+                .and()
+                    .build();
     }
-
 }

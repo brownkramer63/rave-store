@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="fragments/head :: header"></head>
+
+<body>
+<div class="dashboard-main-wrapper">
+    <div th:replace="fragments/header :: header"></div>
+    <main class="container-fluid px-4" style="padding-top: 96px;">
+        <section class="row align-items-center min-vh-100">
+            <div class="col-lg-8 mx-auto text-center">
+                <p class="text-uppercase text-muted font-weight-bold mb-3">Automation workspace</p>
+                <h1 class="display-4 font-weight-bold text-dark mb-4">cataclysmSolutions</h1>
+                <p class="lead text-muted mb-5">
+                    One hub for AutoFormProcessing, CustomTotem presentation assets, and client-ready automation workflows.
+                </p>
+                <div class="d-flex justify-content-center flex-wrap mb-5">
+                    <a class="btn btn-primary btn-lg m-2" th:href="@{/autoformprocessing}">Open AutoFormProcessing</a>
+                    <a class="btn btn-outline-dark btn-lg m-2" th:href="@{/customtotem}">Open CustomTotem</a>
+                    <a class="btn btn-outline-secondary btn-lg m-2" th:href="@{/about}">About Us</a>
+                </div>
+                <div class="row text-left">
+                    <div class="col-md-4 mb-3">
+                        <div class="border rounded p-4 h-100">
+                            <h4>Process Forms</h4>
+                            <p class="text-muted mb-0">Import PDFs and Word documents, extract fields, and prepare normalized database records.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="border rounded p-4 h-100">
+                            <h4>Package Offers</h4>
+                            <p class="text-muted mb-0">Showcase CustomTotem products with photo, name, pricing, and demo video sections.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="border rounded p-4 h-100">
+                            <h4>Deploy Fast</h4>
+                            <p class="text-muted mb-0">Run as a hosted Spring Boot app on the server with public navigation and no login gate.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="fragments/javascript :: js"></div>
+</body>
+
+</html>

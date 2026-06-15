@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   app:
-    container_name: sparkle-app
+    container_name: cataclysm-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,9 +13,9 @@ services:
       SERVER_PORT: 8085
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_NAME: ${DB_NAME:-sparkle_accounting}
-      DB_USERNAME: ${DB_USERNAME:-sparkle}
-      DB_PASSWORD: ${DB_PASSWORD:-sparkle123}
+      DB_NAME: ${DB_NAME:-cataclysm_solutions}
+      DB_USERNAME: ${DB_USERNAME:-cataclysm}
+      DB_PASSWORD: ${DB_PASSWORD:-cataclysm123}
       DB_SSL: "false"
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_SQL_INIT_MODE: never
@@ -26,18 +26,18 @@ services:
       mysql:
         condition: service_healthy
     networks:
-      - sparkle-network
+      - cataclysm-network
 
   mysql:
     image: mysql:8.4
-    container_name: sparkle-mysql
+    container_name: cataclysm-mysql
     restart: unless-stopped
     ports:
       - "${MYSQL_PORT:-3306}:3306"
     environment:
-      MYSQL_DATABASE: ${DB_NAME:-sparkle_accounting}
-      MYSQL_USER: ${DB_USERNAME:-sparkle}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-sparkle123}
+      MYSQL_DATABASE: ${DB_NAME:-cataclysm_solutions}
+      MYSQL_USER: ${DB_USERNAME:-cataclysm}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-cataclysm123}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
     command: --default-authentication-plugin=caching_sha2_password
     healthcheck:
@@ -49,10 +49,10 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
-      - sparkle-network
+      - cataclysm-network
 
 networks:
-  sparkle-network:
+  cataclysm-network:
 
 volumes:
   mysql-data:
