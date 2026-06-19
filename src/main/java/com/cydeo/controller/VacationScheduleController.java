@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/vacation-scheduling")
@@ -86,22 +89,80 @@ public class VacationScheduleController {
     private List<VacationCalendarView> buildVacationCalendarViews(List<VacationCalendar> vacationCalendars) {
         List<VacationCalendarView> views = new ArrayList<>();
         for (VacationCalendar vacationCalendar : vacationCalendars) {
-            views.add(new VacationCalendarView(vacationCalendar, buildCalendarDays(vacationCalendar)));
+            views.add(new VacationCalendarView(vacationCalendar, buildCalendarMonths(vacationCalendar)));
         }
         return views;
     }
 
-    private List<LocalDate> buildCalendarDays(VacationCalendar vacationCalendar) {
-        List<LocalDate> days = new ArrayList<>();
-        if (vacationCalendar.getStartDate() == null || vacationCalendar.getEndDate() == null) {
-            return days;
+    private List<CalendarMonthView> buildCalendarMonths(VacationCalendar vacationCalendar) {
+        DateRange displayRange = getDisplayRange(vacationCalendar);
+        List<CalendarMonthView> months = new ArrayList<>();
+        if (displayRange == null) {
+            return months;
         }
 
-        long daysBetween = ChronoUnit.DAYS.between(vacationCalendar.getStartDate(), vacationCalendar.getEndDate());
-        for (int index = 0; index <= daysBetween; index++) {
-            days.add(vacationCalendar.getStartDate().plusDays(index));
+        YearMonth currentMonth = YearMonth.from(displayRange.getStartDate());
+        YearMonth endMonth = YearMonth.from(displayRange.getEndDate());
+        while (!currentMonth.isAfter(endMonth)) {
+            months.add(new CalendarMonthView(currentMonth, buildMonthDays(vacationCalendar, currentMonth)));
+            currentMonth = currentMonth.plusMonths(1);
+        }
+        return months;
+    }
+
+    private DateRange getDisplayRange(VacationCalendar vacationCalendar) {
+        LocalDate startDate = vacationCalendar.getStartDate();
+        LocalDate endDate = vacationCalendar.getEndDate();
+
+        for (VacationAvailability availability : vacationCalendar.getAvailabilities()) {
+            if (startDate == null || availability.getAvailableFrom().isBefore(startDate)) {
+                startDate = availability.getAvailableFrom();
+            }
+            if (endDate == null || availability.getAvailableTo().isAfter(endDate)) {
+                endDate = availability.getAvailableTo();
+            }
+        }
+
+        if (startDate == null || endDate == null) {
+            return null;
+        }
+        return new DateRange(startDate, endDate);
+    }
+
+    private List<CalendarDayView> buildMonthDays(VacationCalendar vacationCalendar, YearMonth month) {
+        List<CalendarDayView> days = new ArrayList<>();
+        LocalDate firstDay = month.atDay(1);
+        int leadingBlankDays = firstDay.getDayOfWeek().getValue() % 7;
+        for (int index = 0; index < leadingBlankDays; index++) {
+            days.add(CalendarDayView.blank());
+        }
+
+        for (int dayOfMonth = 1; dayOfMonth <= month.lengthOfMonth(); dayOfMonth++) {
+            LocalDate date = month.atDay(dayOfMonth);
+            days.add(new CalendarDayView(
+                    date,
+                    isVacationWindow(vacationCalendar, date),
+                    getAvailablePeople(vacationCalendar, date)
+            ));
         }
         return days;
+    }
+
+    private boolean isVacationWindow(VacationCalendar vacationCalendar, LocalDate date) {
+        return vacationCalendar.getStartDate() != null
+                && vacationCalendar.getEndDate() != null
+                && !date.isBefore(vacationCalendar.getStartDate())
+                && !date.isAfter(vacationCalendar.getEndDate());
+    }
+
+    private List<String> getAvailablePeople(VacationCalendar vacationCalendar, LocalDate date) {
+        Set<String> names = new LinkedHashSet<>();
+        for (VacationAvailability availability : vacationCalendar.getAvailabilities()) {
+            if (!date.isBefore(availability.getAvailableFrom()) && !date.isAfter(availability.getAvailableTo())) {
+                names.add(availability.getPersonName());
+            }
+        }
+        return new ArrayList<>(names);
     }
 
     private void ensureStarterCalendars() {
@@ -124,19 +185,93 @@ public class VacationScheduleController {
 
     public static class VacationCalendarView {
         private final VacationCalendar vacationCalendar;
-        private final List<LocalDate> days;
+        private final List<CalendarMonthView> months;
 
-        public VacationCalendarView(VacationCalendar vacationCalendar, List<LocalDate> days) {
+        public VacationCalendarView(VacationCalendar vacationCalendar, List<CalendarMonthView> months) {
             this.vacationCalendar = vacationCalendar;
-            this.days = days;
+            this.months = months;
         }
 
         public VacationCalendar getVacationCalendar() {
             return vacationCalendar;
         }
 
-        public List<LocalDate> getDays() {
+        public List<CalendarMonthView> getMonths() {
+            return months;
+        }
+    }
+
+    public static class CalendarMonthView {
+        private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("MMMM yyyy");
+
+        private final YearMonth month;
+        private final List<CalendarDayView> days;
+
+        public CalendarMonthView(YearMonth month, List<CalendarDayView> days) {
+            this.month = month;
+            this.days = days;
+        }
+
+        public YearMonth getMonth() {
+            return month;
+        }
+
+        public String getDisplayName() {
+            return month.atDay(1).format(MONTH_FORMATTER);
+        }
+
+        public List<CalendarDayView> getDays() {
             return days;
+        }
+    }
+
+    public static class CalendarDayView {
+        private final LocalDate date;
+        private final boolean vacationWindow;
+        private final List<String> availablePeople;
+
+        public CalendarDayView(LocalDate date, boolean vacationWindow, List<String> availablePeople) {
+            this.date = date;
+            this.vacationWindow = vacationWindow;
+            this.availablePeople = availablePeople;
+        }
+
+        public static CalendarDayView blank() {
+            return new CalendarDayView(null, false, new ArrayList<>());
+        }
+
+        public LocalDate getDate() {
+            return date;
+        }
+
+        public boolean isVacationWindow() {
+            return vacationWindow;
+        }
+
+        public List<String> getAvailablePeople() {
+            return availablePeople;
+        }
+
+        public boolean isAvailable() {
+            return !availablePeople.isEmpty();
+        }
+    }
+
+    private static class DateRange {
+        private final LocalDate startDate;
+        private final LocalDate endDate;
+
+        public DateRange(LocalDate startDate, LocalDate endDate) {
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public LocalDate getEndDate() {
+            return endDate;
         }
     }
 }

@@ -26,24 +26,71 @@
             font-size: 0.88rem;
         }
 
-        .vacation-page .date-strip {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
-            gap: 8px;
+        .vacation-page .calendar-month {
+            border: 1px solid #e6e8ee;
+            border-radius: 8px;
+            padding: 12px;
+            background: #fff;
         }
 
-        .vacation-page .calendar-day {
-            min-height: 68px;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #edf0f5;
-            background: #dbeafe;
-            border-color: #93c5fd;
-            color: #1d4ed8;
+        .vacation-page .calendar-month-title {
             font-weight: 700;
+            color: #202124;
+            margin-bottom: 10px;
+        }
+
+        .vacation-page .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 5px;
+        }
+
+        .vacation-page .calendar-label {
+            color: #6b7280;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .vacation-page .calendar-cell {
+            min-height: 86px;
+            border: 1px solid #edf0f5;
+            border-radius: 6px;
+            background: #fff;
+            padding: 6px;
+            overflow-wrap: anywhere;
+        }
+
+        .vacation-page .calendar-cell.blank {
+            background: #f8fafc;
+            border-style: dashed;
+        }
+
+        .vacation-page .calendar-cell.trip-window {
+            background: #eef6ff;
+            border-color: #bfdbfe;
+        }
+
+        .vacation-page .calendar-cell.available {
+            background: #e8fff3;
+            border-color: #86efac;
+        }
+
+        .vacation-page .calendar-day-number {
+            color: #202124;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .vacation-page .availability-name {
+            display: block;
+            border-radius: 4px;
+            background: #145da0;
+            color: #fff;
+            font-size: 0.72rem;
+            margin-top: 4px;
+            padding: 2px 4px;
         }
 
         .vacation-page .empty-plan {
@@ -153,17 +200,36 @@
                                     </div>
                                 </div>
 
-                                <div th:if="${calendar.startDate != null && calendar.endDate != null}">
-                                    <div class="date-strip mb-3">
-                                        <div class="calendar-day" th:each="day : ${calendarView.days}">
-                                            <span th:text="${#temporals.format(day, 'EEE')}">Thu</span>
-                                            <strong th:text="${#temporals.format(day, 'MMM d')}">Aug 20</strong>
-                                            <small th:text="${#temporals.format(day, 'yyyy')}">2026</small>
+                                <div th:if="${!calendarView.months.isEmpty()}">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 mb-3" th:each="monthView : ${calendarView.months}">
+                                            <div class="calendar-month">
+                                                <div class="calendar-month-title" th:text="${monthView.displayName}">August 2026</div>
+                                                <div class="calendar-grid">
+                                                    <div class="calendar-label">Sun</div>
+                                                    <div class="calendar-label">Mon</div>
+                                                    <div class="calendar-label">Tue</div>
+                                                    <div class="calendar-label">Wed</div>
+                                                    <div class="calendar-label">Thu</div>
+                                                    <div class="calendar-label">Fri</div>
+                                                    <div class="calendar-label">Sat</div>
+                                                    <div th:each="day : ${monthView.days}"
+                                                         th:classappend="${day.date == null ? ' blank' : (day.available ? ' available' : (day.vacationWindow ? ' trip-window' : ''))}"
+                                                         class="calendar-cell">
+                                                        <div th:if="${day.date != null}">
+                                                            <div class="calendar-day-number" th:text="${#temporals.format(day.date, 'd')}">1</div>
+                                                            <span class="availability-name"
+                                                                  th:each="person : ${day.availablePeople}"
+                                                                  th:text="${person}">Person</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="empty-plan mb-3" th:if="${calendar.startDate == null || calendar.endDate == null}">
-                                    Set dates later by creating a dated calendar when the plan is ready.
+                                <div class="empty-plan mb-3" th:if="${calendarView.months.isEmpty()}">
+                                    Add availability to build this vacation calendar.
                                 </div>
 
                                 <h5>Availability</h5>
