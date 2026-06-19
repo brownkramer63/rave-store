@@ -26,6 +26,8 @@ public class SecurityConfig {
                             "/about",
                             "/autoformprocessing",
                             "/customtotem",
+                            "/vacation-scheduling",
+                            "/vacation-scheduling/**",
                             "/fragments/**",
                             "/css/**",
                             "/js/**",
