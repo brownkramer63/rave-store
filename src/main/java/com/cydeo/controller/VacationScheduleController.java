@@ -28,6 +28,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class VacationScheduleController {
 
+    private static final String SHARK_FISHING_DESCRIPTION = "shark fishing at panama city beach Florida night of 08/21/2026. Planning on staying in Florida until Following Sunday. Flying down Wednesday night or Thursday.";
+    private static final String BEER_OLYMPICS_DESCRIPTION = "this will be hosted in Pineville Arkansas at Rich's (My dads) Lodge. Still discussing games for this but there will for sure be a battle for the dunkin sunglasses to see who is most worthy to wield them. Will engage in other shenanigans and cause a ruckus on the property.";
+
     private final VacationCalendarRepository vacationCalendarRepository;
     private final VacationAvailabilityRepository vacationAvailabilityRepository;
 
@@ -51,6 +54,9 @@ public class VacationScheduleController {
         }
 
         vacationCalendar.setName(vacationCalendar.getName().trim());
+        if (vacationCalendar.getDescription() != null) {
+            vacationCalendar.setDescription(vacationCalendar.getDescription().trim());
+        }
         vacationCalendarRepository.save(vacationCalendar);
         redirectAttributes.addFlashAttribute("successMessage", "Vacation calendar created.");
         return "redirect:/vacation-scheduling";
@@ -167,20 +173,42 @@ public class VacationScheduleController {
 
     private void ensureStarterCalendars() {
         vacationCalendarRepository.findByNameIgnoreCaseAndIsDeletedFalse("Shark Fishing Trip")
+                .map(calendar -> {
+                    updateStarterCalendar(calendar, SHARK_FISHING_DESCRIPTION, LocalDate.of(2026, 8, 20), LocalDate.of(2026, 8, 23));
+                    return vacationCalendarRepository.save(calendar);
+                })
                 .orElseGet(() -> {
                     VacationCalendar calendar = new VacationCalendar();
                     calendar.setName("Shark Fishing Trip");
                     calendar.setStartDate(LocalDate.of(2026, 8, 20));
                     calendar.setEndDate(LocalDate.of(2026, 8, 23));
+                    calendar.setDescription(SHARK_FISHING_DESCRIPTION);
                     return vacationCalendarRepository.save(calendar);
                 });
 
         vacationCalendarRepository.findByNameIgnoreCaseAndIsDeletedFalse("Beer Olympics")
+                .map(calendar -> {
+                    updateStarterCalendar(calendar, BEER_OLYMPICS_DESCRIPTION, null, null);
+                    return vacationCalendarRepository.save(calendar);
+                })
                 .orElseGet(() -> {
                     VacationCalendar calendar = new VacationCalendar();
                     calendar.setName("Beer Olympics");
+                    calendar.setDescription(BEER_OLYMPICS_DESCRIPTION);
                     return vacationCalendarRepository.save(calendar);
                 });
+    }
+
+    private void updateStarterCalendar(VacationCalendar calendar, String description, LocalDate startDate, LocalDate endDate) {
+        if (calendar.getDescription() == null || calendar.getDescription().trim().isEmpty()) {
+            calendar.setDescription(description);
+        }
+        if (startDate != null && calendar.getStartDate() == null) {
+            calendar.setStartDate(startDate);
+        }
+        if (endDate != null && calendar.getEndDate() == null) {
+            calendar.setEndDate(endDate);
+        }
     }
 
     public static class VacationCalendarView {
