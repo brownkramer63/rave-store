@@ -32,6 +32,9 @@ public class BaseEntityListener extends AuditingEntityListener {
                 baseEntity.lastUpdateUserId = -1L;
             }
 
+        } else {
+            baseEntity.insertUserId = -1L;
+            baseEntity.lastUpdateUserId = -1L;
         }
     }
 
