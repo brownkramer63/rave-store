@@ -7,6 +7,7 @@ import com.cydeo.repository.VacationCalendarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,8 +20,10 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -28,16 +31,17 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class VacationScheduleController {
 
-    private static final String SHARK_FISHING_DESCRIPTION = "shark fishing at panama city beach Florida night of 08/21/2026. Planning on staying in Florida until Following Sunday. Flying down Wednesday night or Thursday.";
+    private static final String SHARK_FISHING_DESCRIPTION = "shark fishing at panama city beach Florida night of 08/21/2026. Planning on staying in Florida until Following Sunday. Flying down Wednesday night or Thursday.\n\nWebsite link to guide: https://dnasharkcharters.com/";
     private static final String BEER_OLYMPICS_DESCRIPTION = "this will be hosted in Pineville Arkansas at Rich's (My dads) Lodge. Still discussing games for this but there will for sure be a battle for the dunkin sunglasses to see who is most worthy to wield them. Will engage in other shenanigans and cause a ruckus on the property.";
 
     private final VacationCalendarRepository vacationCalendarRepository;
     private final VacationAvailabilityRepository vacationAvailabilityRepository;
 
     @GetMapping
+    @Transactional
     public String vacationScheduling(Model model) {
         ensureStarterCalendars();
-        List<VacationCalendar> vacationCalendars = vacationCalendarRepository.findAllByIsDeletedFalseOrderByInsertDateTimeAsc();
+        List<VacationCalendar> vacationCalendars = getSharedVacationCalendars();
         model.addAttribute("title", "Vacation Scheduling");
         model.addAttribute("vacationCalendars", vacationCalendars);
         model.addAttribute("vacationCalendarViews", buildVacationCalendarViews(vacationCalendars));
@@ -47,6 +51,7 @@ public class VacationScheduleController {
     }
 
     @PostMapping("/calendars")
+    @Transactional
     public String createCalendar(@ModelAttribute VacationCalendar vacationCalendar, RedirectAttributes redirectAttributes) {
         if (vacationCalendar.getName() == null || vacationCalendar.getName().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Vacation name is required.");
@@ -57,8 +62,21 @@ public class VacationScheduleController {
         if (vacationCalendar.getDescription() != null) {
             vacationCalendar.setDescription(vacationCalendar.getDescription().trim());
         }
+
+        List<VacationCalendar> matchingCalendars = vacationCalendarRepository.findAllByNameIgnoreCaseAndIsDeletedFalseOrderByInsertDateTimeAsc(vacationCalendar.getName());
+        if (!matchingCalendars.isEmpty()) {
+            VacationCalendar sharedCalendar = matchingCalendars.get(0);
+            updateSharedVacationCalendar(sharedCalendar, vacationCalendar);
+            for (int index = 1; index < matchingCalendars.size(); index++) {
+                mergeVacationCalendar(sharedCalendar, matchingCalendars.get(index));
+            }
+            vacationCalendarRepository.save(sharedCalendar);
+            redirectAttributes.addFlashAttribute("successMessage", "Shared vacation calendar updated.");
+            return "redirect:/vacation-scheduling";
+        }
+
         vacationCalendarRepository.save(vacationCalendar);
-        redirectAttributes.addFlashAttribute("successMessage", "Vacation calendar created.");
+        redirectAttributes.addFlashAttribute("successMessage", "Shared vacation calendar created.");
         return "redirect:/vacation-scheduling";
     }
 
@@ -80,6 +98,10 @@ public class VacationScheduleController {
 
         VacationCalendar vacationCalendar = vacationCalendarRepository.findById(vacationCalendarId)
                 .orElseThrow(() -> new IllegalArgumentException("Vacation calendar not found."));
+        if (Boolean.TRUE.equals(vacationCalendar.getIsDeleted())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vacation calendar not found.");
+            return "redirect:/vacation-scheduling";
+        }
 
         VacationAvailability availability = new VacationAvailability();
         availability.setVacationCalendar(vacationCalendar);
@@ -171,6 +193,33 @@ public class VacationScheduleController {
         return new ArrayList<>(names);
     }
 
+    private List<VacationCalendar> getSharedVacationCalendars() {
+        List<VacationCalendar> vacationCalendars = vacationCalendarRepository.findAllActiveWithAvailabilities();
+        Map<String, VacationCalendar> sharedCalendarsByName = new LinkedHashMap<>();
+        boolean calendarsWereMerged = false;
+
+        for (VacationCalendar vacationCalendar : vacationCalendars) {
+            String calendarKey = normalizeVacationName(vacationCalendar.getName());
+            if (calendarKey.isEmpty()) {
+                continue;
+            }
+
+            VacationCalendar sharedCalendar = sharedCalendarsByName.get(calendarKey);
+            if (sharedCalendar == null) {
+                sharedCalendarsByName.put(calendarKey, vacationCalendar);
+            } else {
+                mergeVacationCalendar(sharedCalendar, vacationCalendar);
+                calendarsWereMerged = true;
+            }
+        }
+
+        if (calendarsWereMerged) {
+            vacationCalendarRepository.saveAll(vacationCalendars);
+            return vacationCalendarRepository.findAllActiveWithAvailabilities();
+        }
+        return vacationCalendars;
+    }
+
     private void ensureStarterCalendars() {
         vacationCalendarRepository.findByNameIgnoreCaseAndIsDeletedFalse("Shark Fishing Trip")
                 .map(calendar -> {
@@ -200,7 +249,8 @@ public class VacationScheduleController {
     }
 
     private void updateStarterCalendar(VacationCalendar calendar, String description, LocalDate startDate, LocalDate endDate) {
-        if (calendar.getDescription() == null || calendar.getDescription().trim().isEmpty()) {
+        if (calendar.getDescription() == null || calendar.getDescription().trim().isEmpty()
+                || "Shark Fishing Trip".equalsIgnoreCase(calendar.getName())) {
             calendar.setDescription(description);
         }
         if (startDate != null && calendar.getStartDate() == null) {
@@ -209,6 +259,47 @@ public class VacationScheduleController {
         if (endDate != null && calendar.getEndDate() == null) {
             calendar.setEndDate(endDate);
         }
+    }
+
+    private void updateSharedVacationCalendar(VacationCalendar sharedCalendar, VacationCalendar submittedCalendar) {
+        if (submittedCalendar.getDescription() != null && !submittedCalendar.getDescription().trim().isEmpty()) {
+            sharedCalendar.setDescription(submittedCalendar.getDescription().trim());
+        }
+        if (submittedCalendar.getStartDate() != null) {
+            sharedCalendar.setStartDate(submittedCalendar.getStartDate());
+        }
+        if (submittedCalendar.getEndDate() != null) {
+            sharedCalendar.setEndDate(submittedCalendar.getEndDate());
+        }
+    }
+
+    private void mergeVacationCalendar(VacationCalendar sharedCalendar, VacationCalendar duplicateCalendar) {
+        if (sharedCalendar.getDescription() == null || sharedCalendar.getDescription().trim().isEmpty()) {
+            sharedCalendar.setDescription(duplicateCalendar.getDescription());
+        }
+        if (sharedCalendar.getStartDate() == null
+                || (duplicateCalendar.getStartDate() != null && duplicateCalendar.getStartDate().isBefore(sharedCalendar.getStartDate()))) {
+            sharedCalendar.setStartDate(duplicateCalendar.getStartDate());
+        }
+        if (sharedCalendar.getEndDate() == null
+                || (duplicateCalendar.getEndDate() != null && duplicateCalendar.getEndDate().isAfter(sharedCalendar.getEndDate()))) {
+            sharedCalendar.setEndDate(duplicateCalendar.getEndDate());
+        }
+
+        for (VacationAvailability availability : duplicateCalendar.getAvailabilities()) {
+            availability.setVacationCalendar(sharedCalendar);
+            if (!sharedCalendar.getAvailabilities().contains(availability)) {
+                sharedCalendar.getAvailabilities().add(availability);
+            }
+        }
+        duplicateCalendar.setIsDeleted(true);
+    }
+
+    private String normalizeVacationName(String name) {
+        if (name == null) {
+            return "";
+        }
+        return name.trim().replaceAll("\\s+", " ").toLowerCase();
     }
 
     public static class VacationCalendarView {
