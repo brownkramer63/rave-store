@@ -320,16 +320,24 @@
                                             <th>Name</th>
                                             <th>Available From</th>
                                             <th>Available To</th>
+                                            <th>Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr th:if="${calendar.availabilities.isEmpty()}">
-                                            <td colspan="3" class="text-muted text-center">No availability added yet.</td>
+                                            <td colspan="4" class="text-muted text-center">No availability added yet.</td>
                                         </tr>
                                         <tr th:each="availability : ${calendar.availabilities}">
                                             <td th:text="${availability.personName}">Name</td>
                                             <td th:text="${#temporals.format(availability.availableFrom, 'MM/dd/yyyy')}">08/20/2026</td>
                                             <td th:text="${#temporals.format(availability.availableTo, 'MM/dd/yyyy')}">08/23/2026</td>
+                                            <td>
+                                                <form th:action="@{/vacation-scheduling/availability/{id}/delete(id=${availability.id})}"
+                                                      method="post"
+                                                      class="mb-0">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>

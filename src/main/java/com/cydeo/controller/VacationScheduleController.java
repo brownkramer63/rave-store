@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,16 +32,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class VacationScheduleController {
 
-    private static final String SHARK_FISHING_DESCRIPTION = "shark fishing at panama city beach Florida night of 08/21/2026. Planning on staying in Florida until Following Sunday. Flying down Wednesday night or Thursday.\n\nWebsite link to guide: https://dnasharkcharters.com/";
-    private static final String BEER_OLYMPICS_DESCRIPTION = "this will be hosted in Pineville Arkansas at Rich's (My dads) Lodge. Still discussing games for this but there will for sure be a battle for the dunkin sunglasses to see who is most worthy to wield them. Will engage in other shenanigans and cause a ruckus on the property.";
-
     private final VacationCalendarRepository vacationCalendarRepository;
     private final VacationAvailabilityRepository vacationAvailabilityRepository;
 
     @GetMapping
     @Transactional
     public String vacationScheduling(Model model) {
-        ensureStarterCalendars();
         List<VacationCalendar> vacationCalendars = getSharedVacationCalendars();
         model.addAttribute("title", "Vacation Scheduling");
         model.addAttribute("vacationCalendars", vacationCalendars);
@@ -111,6 +108,20 @@ public class VacationScheduleController {
         vacationAvailabilityRepository.save(availability);
 
         redirectAttributes.addFlashAttribute("successMessage", "Availability added.");
+        return "redirect:/vacation-scheduling";
+    }
+
+    @PostMapping("/availability/{availabilityId}/delete")
+    public String deleteAvailability(@PathVariable Long availabilityId, RedirectAttributes redirectAttributes) {
+        VacationAvailability availability = vacationAvailabilityRepository.findById(availabilityId)
+                .orElse(null);
+        if (availability == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Availability entry not found.");
+            return "redirect:/vacation-scheduling";
+        }
+
+        vacationAvailabilityRepository.delete(availability);
+        redirectAttributes.addFlashAttribute("successMessage", "Availability entry removed.");
         return "redirect:/vacation-scheduling";
     }
 
@@ -218,47 +229,6 @@ public class VacationScheduleController {
             return vacationCalendarRepository.findAllActiveWithAvailabilities();
         }
         return vacationCalendars;
-    }
-
-    private void ensureStarterCalendars() {
-        vacationCalendarRepository.findByNameIgnoreCaseAndIsDeletedFalse("Shark Fishing Trip")
-                .map(calendar -> {
-                    updateStarterCalendar(calendar, SHARK_FISHING_DESCRIPTION, LocalDate.of(2026, 8, 20), LocalDate.of(2026, 8, 23));
-                    return vacationCalendarRepository.save(calendar);
-                })
-                .orElseGet(() -> {
-                    VacationCalendar calendar = new VacationCalendar();
-                    calendar.setName("Shark Fishing Trip");
-                    calendar.setStartDate(LocalDate.of(2026, 8, 20));
-                    calendar.setEndDate(LocalDate.of(2026, 8, 23));
-                    calendar.setDescription(SHARK_FISHING_DESCRIPTION);
-                    return vacationCalendarRepository.save(calendar);
-                });
-
-        vacationCalendarRepository.findByNameIgnoreCaseAndIsDeletedFalse("Beer Olympics")
-                .map(calendar -> {
-                    updateStarterCalendar(calendar, BEER_OLYMPICS_DESCRIPTION, null, null);
-                    return vacationCalendarRepository.save(calendar);
-                })
-                .orElseGet(() -> {
-                    VacationCalendar calendar = new VacationCalendar();
-                    calendar.setName("Beer Olympics");
-                    calendar.setDescription(BEER_OLYMPICS_DESCRIPTION);
-                    return vacationCalendarRepository.save(calendar);
-                });
-    }
-
-    private void updateStarterCalendar(VacationCalendar calendar, String description, LocalDate startDate, LocalDate endDate) {
-        if (calendar.getDescription() == null || calendar.getDescription().trim().isEmpty()
-                || "Shark Fishing Trip".equalsIgnoreCase(calendar.getName())) {
-            calendar.setDescription(description);
-        }
-        if (startDate != null && calendar.getStartDate() == null) {
-            calendar.setStartDate(startDate);
-        }
-        if (endDate != null && calendar.getEndDate() == null) {
-            calendar.setEndDate(endDate);
-        }
     }
 
     private void updateSharedVacationCalendar(VacationCalendar sharedCalendar, VacationCalendar submittedCalendar) {

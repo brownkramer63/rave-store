@@ -27,25 +27,25 @@ public class DashboardController {
 
     @GetMapping("/")
     public String navigateToLanding(Model model) {
-        model.addAttribute("title", "cataclysmSolutions");
+        model.addAttribute("title", "Cataclysm Solutions");
         return "landing";
     }
 
     @GetMapping("/autoformprocessing")
     public String navigateToAutoFormProcessing(Model model) {
-        model.addAttribute("title", "AutoFormProcessing | cataclysmSolutions");
+        model.addAttribute("title", "AutoFormProcessing | Cataclysm Solutions");
         return "autoformprocessing";
     }
 
     @GetMapping("/customtotem")
     public String navigateToCustomTotem(Model model) {
-        model.addAttribute("title", "CustomTotem | cataclysmSolutions");
+        model.addAttribute("title", "Emergency Totem | Cataclysm Solutions");
         return "customtotem";
     }
 
     @GetMapping("/about")
     public String navigateToAbout(Model model) {
-        model.addAttribute("title", "About Us | cataclysmSolutions");
+        model.addAttribute("title", "About Us | Cataclysm Solutions");
         return "about";
     }
 

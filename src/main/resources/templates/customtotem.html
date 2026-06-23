@@ -11,41 +11,47 @@
         <div class="container-fluid dashboard-content">
             <div class="row mb-4">
                 <div class="col-lg-9">
-                    <p class="text-uppercase text-muted font-weight-bold mb-2">cataclysmSolutions module</p>
-                    <h1 class="mb-3">CustomTotem</h1>
-                    <p class="lead text-muted">Showcase custom Totem offers with product photos, names, pricing, and demo videos.</p>
+                    <p class="text-uppercase text-muted font-weight-bold mb-2">Cataclysm Solutions module</p>
+                    <h1 class="mb-3">Emergency Totem</h1>
+                    <p class="lead text-muted">
+                        Emergency Totems are compact safety markers designed to fit inside your CamelBak and stay ready
+                        for hikes, festivals, trips, and long days outdoors. Each totem can be equipped with a
+                        customizable RFID tag, giving you a quick, fun way to share socials, contact info, or a personal
+                        link with the people you meet.
+                    </p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6 col-xl-3 mb-4" th:each="slot : ${#numbers.sequence(1,4)}">
+                <div class="col-lg-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body">
-                            <div class="bg-light border rounded d-flex align-items-center justify-content-center mb-3" style="height: 220px;">
-                                <div class="text-center text-muted">
-                                    <i class="fa fa-image fa-3x mb-3"></i>
-                                    <div th:text="'Photo Spot ' + ${slot}">Photo Spot</div>
-                                </div>
-                            </div>
-                            <label class="font-weight-bold">Name</label>
-                            <div class="border rounded p-3 mb-3 text-muted">CustomTotem product name</div>
-                            <label class="font-weight-bold">Pricing</label>
-                            <div class="border rounded p-3 text-muted">Price or package tier</div>
+                            <h4 class="mb-3">Trail-ready form</h4>
+                            <p class="text-muted mb-0">
+                                Slim enough to pack into a CamelBak pocket while still being easy to grab when you need
+                                it. Built for practical carry instead of sitting on a shelf.
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-lg-6 mb-4" th:each="video : ${#numbers.sequence(1,2)}">
+                <div class="col-lg-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h4 th:text="'Demo Video ' + ${video}">Demo Video</h4>
-                            <div class="bg-dark border rounded d-flex align-items-center justify-content-center" style="height: 280px;">
-                                <div class="text-center text-white-50">
-                                    <i class="fa fa-play-circle fa-4x mb-3"></i>
-                                    <div>Video embed spot</div>
-                                </div>
-                            </div>
-                            <p class="text-muted mt-3 mb-0">Place a product walkthrough, customer demo, or installation preview here.</p>
+                            <h4 class="mb-3">Custom RFID sharing</h4>
+                            <p class="text-muted mb-0">
+                                Add a programmable RFID tag that can point to your socials, a Linktree-style profile,
+                                emergency contact details, or another personal URL.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="mb-3">Made for connection</h4>
+                            <p class="text-muted mb-0">
+                                A lightweight conversation piece with a real utility layer: useful for safety,
+                                identification, and sharing your world without awkwardly spelling out usernames.
+                            </p>
                         </div>
                     </div>
                 </div>
