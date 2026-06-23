@@ -28,24 +28,28 @@ public class DashboardController {
     @GetMapping("/")
     public String navigateToLanding(Model model) {
         model.addAttribute("title", "Cataclysm Solutions");
+        model.addAttribute("pageDescription", "Cataclysm Solutions is a custom project hub for Emergency Totem, vacation scheduling, and automation tools.");
         return "landing";
     }
 
     @GetMapping("/autoformprocessing")
     public String navigateToAutoFormProcessing(Model model) {
         model.addAttribute("title", "AutoFormProcessing | Cataclysm Solutions");
+        model.addAttribute("pageDescription", "AutoFormProcessing helps organize document ingestion, field extraction, and generated records for form-driven workflows.");
         return "autoformprocessing";
     }
 
     @GetMapping("/customtotem")
     public String navigateToCustomTotem(Model model) {
         model.addAttribute("title", "Emergency Totem | Cataclysm Solutions");
+        model.addAttribute("pageDescription", "Emergency Totems are CamelBak-ready safety markers with customizable RFID tags for sharing socials, contact info, and personal links.");
         return "customtotem";
     }
 
     @GetMapping("/about")
     public String navigateToAbout(Model model) {
         model.addAttribute("title", "About Us | Cataclysm Solutions");
+        model.addAttribute("pageDescription", "Learn about Cataclysm Solutions and the custom tools, trip planning features, and Emergency Totem product concept.");
         return "about";
     }
 
