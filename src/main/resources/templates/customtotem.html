@@ -11,102 +11,260 @@
         <div class="container-fluid dashboard-content">
             <div class="row mb-4">
                 <div class="col-lg-9">
-                    <p class="text-uppercase text-muted font-weight-bold mb-2">Cataclysm Solutions module</p>
-                    <h1 class="mb-3">Emergency Totem</h1>
+                    <p class="text-uppercase text-muted font-weight-bold mb-2">Rave Store collections</p>
+                    <h1 class="mb-3">Rave Store</h1>
                     <p class="lead text-muted">
-                        Emergency Totems are compact safety markers designed to fit inside your CamelBak and stay ready
-                        for hikes, festivals, trips, and long days outdoors. Each totem can be equipped with a
-                        customizable RFID tag, giving you a quick, fun way to share socials, contact info, or a personal
-                        link with the people you meet.
+                        Browse the core Rave Store product lines: CamelBak-ready Emergency Totems, festival-ready Rave
+                        Hats, and custom 3D printed pieces for events, gifts, and gear experiments.
                     </p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="mb-3">Trail-ready form</h4>
-                            <p class="text-muted mb-0">
-                                Slim enough to pack into a CamelBak pocket while still being easy to grab when you need
-                                it. Built for practical carry instead of sitting on a shelf.
+
+            <ul class="nav nav-tabs mb-4" id="raveStoreTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="totems-tab" data-toggle="tab" href="#totems" role="tab"
+                       aria-controls="totems" aria-selected="true">Emergency Totems</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="hats-tab" data-toggle="tab" href="#hats" role="tab"
+                       aria-controls="hats" aria-selected="false">Rave Hats</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="printing-tab" data-toggle="tab" href="#printing" role="tab"
+                       aria-controls="printing" aria-selected="false">3D Printing</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="raveStoreTabContent">
+                <div class="tab-pane fade show active" id="totems" role="tabpanel" aria-labelledby="totems-tab">
+                    <div class="row mb-4">
+                        <div class="col-lg-9">
+                            <h2 class="mb-3">Emergency Totems</h2>
+                            <p class="lead text-muted">
+                                Emergency Totems are compact safety markers designed to fit inside your CamelBak and
+                                stay ready for hikes, festivals, trips, and long days outdoors. Each totem can be
+                                equipped with a customizable RFID tag for socials, contact info, or a personal link.
                             </p>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="mb-3">Custom RFID sharing</h4>
-                            <p class="text-muted mb-0">
-                                Add a programmable RFID tag that can point to your socials, a Linktree-style profile,
-                                emergency contact details, or another personal URL.
-                            </p>
+                    <div class="row">
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Trail-ready form</h4>
+                                    <p class="text-muted mb-0">
+                                        Slim enough to pack into a CamelBak pocket while still being easy to grab when
+                                        you need it.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Custom RFID sharing</h4>
+                                    <p class="text-muted mb-0">
+                                        Add a programmable RFID tag that can point to socials, a Linktree-style profile,
+                                        emergency contact details, or another personal URL.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Made for connection</h4>
+                                    <p class="text-muted mb-0">
+                                        A lightweight conversation piece with a real utility layer for safety,
+                                        identification, and quick sharing.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="mb-3">Made for connection</h4>
-                            <p class="text-muted mb-0">
-                                A lightweight conversation piece with a real utility layer: useful for safety,
-                                identification, and sharing your world without awkwardly spelling out usernames.
-                            </p>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <h3 class="mb-3">Product Media</h3>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-12">
-                    <h3 class="mb-3">Product Media</h3>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="mb-3">Photo Slot 1</h4>
-                            <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 260px;">
-                                <div class="text-center text-muted">
-                                    <i class="fa fa-image fa-3x mb-3"></i>
-                                    <div>Insert Emergency Totem product photo</div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Photo Slot 1</h4>
+                                    <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 260px;">
+                                        <div class="text-center text-muted">
+                                            <i class="fa fa-image fa-3x mb-3"></i>
+                                            <div>Insert Emergency Totem product photo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Photo Slot 2</h4>
+                                    <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 260px;">
+                                        <div class="text-center text-muted">
+                                            <i class="fa fa-image fa-3x mb-3"></i>
+                                            <div>Insert CamelBak fit or RFID detail photo</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="mb-3">Photo Slot 2</h4>
-                            <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 260px;">
-                                <div class="text-center text-muted">
-                                    <i class="fa fa-image fa-3x mb-3"></i>
-                                    <div>Insert CamelBak fit or RFID detail photo</div>
+
+                <div class="tab-pane fade" id="hats" role="tabpanel" aria-labelledby="hats-tab">
+                    <div class="row mb-4">
+                        <div class="col-lg-9">
+                            <h2 class="mb-3">Rave Hats</h2>
+                            <p class="lead text-muted">
+                                Rave Hats are expressive headwear concepts for festival nights, group themes, and
+                                statement looks that can be customized with color, trim, lighting, or printed accents.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Festival-ready styling</h4>
+                                    <p class="text-muted mb-0">
+                                        Built around bold silhouettes, durable materials, and details that still read
+                                        clearly in low-light event spaces.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Custom themes</h4>
+                                    <p class="text-muted mb-0">
+                                        Match a crew theme, artist set, birthday fit, or one-off idea with colors and
+                                        accents chosen for the moment.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Add-on friendly</h4>
+                                    <p class="text-muted mb-0">
+                                        Leave room for LEDs, charms, tags, clips, and 3D printed pieces that make each
+                                        hat feel personal.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <h3 class="mb-3">Product Media</h3>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Photo Slot 1</h4>
+                                    <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 260px;">
+                                        <div class="text-center text-muted">
+                                            <i class="fa fa-image fa-3x mb-3"></i>
+                                            <div>Insert Rave Hat product photo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Video Slot</h4>
+                                    <div class="bg-dark border rounded d-flex align-items-center justify-content-center" style="height: 260px;">
+                                        <div class="text-center text-white-50">
+                                            <i class="fa fa-play-circle fa-4x mb-3"></i>
+                                            <div>Insert Rave Hat fit or lighting demo</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="mb-3">Product Video Slot 1</h4>
-                            <div class="bg-dark border rounded d-flex align-items-center justify-content-center" style="height: 300px;">
-                                <div class="text-center text-white-50">
-                                    <i class="fa fa-play-circle fa-4x mb-3"></i>
-                                    <div>Insert product demo video</div>
+
+                <div class="tab-pane fade" id="printing" role="tabpanel" aria-labelledby="printing-tab">
+                    <div class="row mb-4">
+                        <div class="col-lg-9">
+                            <h2 class="mb-3">3D Printing</h2>
+                            <p class="lead text-muted">
+                                3D Printing covers custom accessories, product prototypes, replacement parts, and small
+                                batch pieces that turn sketches and ideas into physical objects.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Custom accessories</h4>
+                                    <p class="text-muted mb-0">
+                                        Print charms, clips, mounts, tags, badges, and wearable pieces that pair with
+                                        rave gear or everyday carry.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Prototype support</h4>
+                                    <p class="text-muted mb-0">
+                                        Test dimensions, fit, color, and practical use before committing to a final
+                                        product direction.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Small batch runs</h4>
+                                    <p class="text-muted mb-0">
+                                        Make limited runs for events, gifts, crew drops, and niche ideas that do not
+                                        need full-scale manufacturing.
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h4 class="mb-3">Product Video Slot 2</h4>
-                            <div class="bg-dark border rounded d-flex align-items-center justify-content-center" style="height: 300px;">
-                                <div class="text-center text-white-50">
-                                    <i class="fa fa-play-circle fa-4x mb-3"></i>
-                                    <div>Insert RFID sharing walkthrough video</div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <h3 class="mb-3">Product Media</h3>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Photo Slot 1</h4>
+                                    <div class="bg-light border rounded d-flex align-items-center justify-content-center" style="height: 260px;">
+                                        <div class="text-center text-muted">
+                                            <i class="fa fa-image fa-3x mb-3"></i>
+                                            <div>Insert finished print photo</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h4 class="mb-3">Video Slot</h4>
+                                    <div class="bg-dark border rounded d-flex align-items-center justify-content-center" style="height: 260px;">
+                                        <div class="text-center text-white-50">
+                                            <i class="fa fa-play-circle fa-4x mb-3"></i>
+                                            <div>Insert print process or product walkthrough</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -118,6 +276,21 @@
 </div>
 <div th:replace="fragments/footer :: footer"></div>
 <div th:replace="fragments/javascript :: js"></div>
+<script>
+    $(function () {
+        function showLinkedTab() {
+            if (window.location.hash) {
+                $('#raveStoreTabs a[href="' + window.location.hash + '"]').tab('show');
+            }
+        }
+
+        showLinkedTab();
+        $(window).on('hashchange', showLinkedTab);
+        $('#raveStoreTabs a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+            history.replaceState(null, '', event.target.hash);
+        });
+    });
+</script>
 </body>
 
 </html>

@@ -27,29 +27,29 @@ public class DashboardController {
 
     @GetMapping("/")
     public String navigateToLanding(Model model) {
-        model.addAttribute("title", "Cataclysm Solutions");
-        model.addAttribute("pageDescription", "Cataclysm Solutions is a custom project hub for Emergency Totem, vacation scheduling, and automation tools.");
+        model.addAttribute("title", "Rave Store");
+        model.addAttribute("pageDescription", "Rave Store features Emergency Totems, Rave Hats, and custom 3D printed products.");
         return "landing";
     }
 
     @GetMapping("/autoformprocessing")
     public String navigateToAutoFormProcessing(Model model) {
-        model.addAttribute("title", "AutoFormProcessing | Cataclysm Solutions");
+        model.addAttribute("title", "AutoFormProcessing | Rave Store");
         model.addAttribute("pageDescription", "AutoFormProcessing helps organize document ingestion, field extraction, and generated records for form-driven workflows.");
         return "autoformprocessing";
     }
 
     @GetMapping("/customtotem")
     public String navigateToCustomTotem(Model model) {
-        model.addAttribute("title", "Emergency Totem | Cataclysm Solutions");
-        model.addAttribute("pageDescription", "Emergency Totems are CamelBak-ready safety markers with customizable RFID tags for sharing socials, contact info, and personal links.");
+        model.addAttribute("title", "Rave Store Products");
+        model.addAttribute("pageDescription", "Explore Emergency Totems, Rave Hats, and 3D Printing product lines from Rave Store.");
         return "customtotem";
     }
 
     @GetMapping("/about")
     public String navigateToAbout(Model model) {
-        model.addAttribute("title", "About Us | Cataclysm Solutions");
-        model.addAttribute("pageDescription", "Learn about Cataclysm Solutions and the custom tools, trip planning features, and Emergency Totem product concept.");
+        model.addAttribute("title", "About Us | Rave Store");
+        model.addAttribute("pageDescription", "Learn about Rave Store and its custom event gear, Emergency Totems, Rave Hats, and 3D printed product concepts.");
         return "about";
     }
 
